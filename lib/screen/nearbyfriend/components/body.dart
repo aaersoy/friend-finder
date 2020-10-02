@@ -3,10 +3,15 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:friend_finder/apis/users_api.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 import '../../../constant.dart';
+import 'dart:ui' as ui;
+
+import '../../../user.dart';
+
 
 class Body extends StatefulWidget {
   Body({Key key, this.title}):super(key: key);
@@ -21,15 +26,27 @@ class _BodyState extends State<Body> {
   Marker marker;
   Circle circle;
   GoogleMapController _controller;
+  List<User> users;
+
+
 
   static final CameraPosition initialLocation = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
 
+  Future<Uint8List> resizeImage(String path, int width) async{
+    ByteData data=await rootBundle.load(path);
+
+    ui.Codec codec=await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+  }
+
+
   Future<Uint8List> getMarker() async {
-    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/car_icon.png");
-    return byteData.buffer.asUint8List();
+    final Uint8List markerIcon = await resizeImage('assets/simple_ring.png', 100);
+    return markerIcon;
   }
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
@@ -38,7 +55,7 @@ class _BodyState extends State<Body> {
       marker = Marker(
           markerId: MarkerId("home"),
           position: latlng,
-          rotation: newLocalData.heading,
+          //rotation: newLocalData.heading,
           draggable: false,
           zIndex: 2,
           flat: true,
@@ -93,9 +110,17 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
+  Future<void> getUsers() async{
+    UserAPI userApi=new UserAPI(localJsonPath: "datas/users.json");
+    users=await userApi.getNearbyUser(1);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
+    getUsers();
+    print(users);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -126,14 +151,15 @@ class _BodyState extends State<Body> {
                       child: RaisedButton(
 
                         child: Text("Etrafa Bakın"),
-                        onPressed: (){},
+                        onPressed: (){
+                          getCurrentLocation();
+                        },
                         color: kPrimaryColor.withOpacity(1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
-
                   )
                 ]
               ),
@@ -146,8 +172,9 @@ class _BodyState extends State<Body> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      //One element from read json
                       Card(
-                        child: Text("asdasd"),
+                        child: Text(users.elementAt(0).userName),
                       ),
                       Card(
                         child: Text("asdsadas"),
