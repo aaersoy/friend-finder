@@ -10,7 +10,7 @@ import 'package:location/location.dart';
 import '../../../constant.dart';
 import 'dart:ui' as ui;
 
-import '../../../user.dart';
+import '../../../model/user.dart';
 
 
 class Body extends StatefulWidget {
