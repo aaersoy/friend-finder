@@ -11,6 +11,7 @@ import '../../../constant.dart';
 import 'dart:ui' as ui;
 
 import '../../../model/user.dart';
+import 'package:http/http.dart';
 
 
 class Body extends StatefulWidget {
@@ -27,6 +28,7 @@ class _BodyState extends State<Body> {
   Circle circle;
   GoogleMapController _controller;
   List<User> users;
+  Map data={};
 
 
 
@@ -112,18 +114,40 @@ class _BodyState extends State<Body> {
 
   Future<void> getUsers() async{
     UserAPI userApi=new UserAPI(localJsonPath: "datas/users.json");
-    users=await userApi.getNearbyUser(1);
+    var users_temp=await userApi.getNearbyUser(1);
+    users=users_temp;
   }
+
+  Future<List>
+
+
+  _makeGetRequest() async {
+    // make GET request
+    String url = 'https://jsonplaceholder.typicode.com/posts';
+    Response response = await get(url);
+    // sample info available in response
+    int statusCode = response.statusCode;
+    Map<String, String> headers = response.headers;
+    String contentType = headers['content-type'];
+    String json = response.body;
+    // TODO convert json to object...
+  }
+
 
 
   @override
   Widget build(BuildContext context) {
+
     Size size=MediaQuery.of(context).size;
     getUsers();
+    print("Ayberk2");
     print(users);
+    data=data.isEmpty ? ModalRoute.of(context).settings.arguments : data;
+    users=data['users'];
+    print(users.length);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("widget.title"),
         backgroundColor: kPrimaryColor,
       ),
       body: Container(
