@@ -10,7 +10,7 @@ import 'package:location/location.dart';
 import '../../../constant.dart';
 import 'dart:ui' as ui;
 
-import '../../../model/user.dart';
+import '../../../components/user.dart';
 import 'package:http/http.dart';
 
 
@@ -114,8 +114,7 @@ class _BodyState extends State<Body> {
 
   Future<void> getUsers() async{
     UserAPI userApi=new UserAPI(localJsonPath: "datas/users.json");
-    var users_temp=await userApi.getNearbyUser(1);
-    users=users_temp;
+    users=(await userApi.getNearbyUser(1)).cast<User>();
   }
 
   Future<List>

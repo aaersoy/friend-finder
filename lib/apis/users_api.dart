@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../model/user.dart';
-import '../model/user_profile.dart';
+import '../components//user.dart';
+import '../components//user_profile.dart';
 
 class UserAPI{
 
