@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:friend_finder/apis/users_api.dart';
+import 'file:///C:/src/flutter_project/friend_finder/lib/components/buttons/rounded_button.dart';
+import 'file:///C:/src/flutter_project/friend_finder/lib/components/cards/specified_user_card.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -12,6 +15,8 @@ import 'dart:ui' as ui;
 
 import '../../../components/user.dart';
 import 'package:http/http.dart';
+
+import 'nearbyed_user.dart';
 
 
 class Body extends StatefulWidget {
@@ -73,6 +78,8 @@ class _BodyState extends State<Body> {
     });
   }
 
+
+
   void getCurrentLocation() async {
     try {
 
@@ -133,14 +140,28 @@ class _BodyState extends State<Body> {
   }
 
 
+  //server tarafını test etmek için
+  Future<void> createAlbum() async {
 
-  @override
+    final Response response = await post(
+      'http://34.78.218.216:443',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'title': "ayberk",
+        'title 2':"ceyda"
+      }),
+    );
+
+  }
+
+    @override
   Widget build(BuildContext context) {
-
+    //createAlbum();
     Size size=MediaQuery.of(context).size;
     getUsers();
-    print("Ayberk2");
-    print(users);
+    //print(users);
     data=data.isEmpty ? ModalRoute.of(context).settings.arguments : data;
     users=data['users'];
     print(users.length);
@@ -153,60 +174,42 @@ class _BodyState extends State<Body> {
         child: Column(
           children: [
             Container(
-              height: size.height*0.55,
+              height: size.height*0.40,
               child: Stack(
-                children: [
-                  GoogleMap(
-                    mapType: MapType.normal,
-                    initialCameraPosition: initialLocation,
-                    markers: Set.of((marker != null) ? [marker] : []),
-                    circles: Set.of((circle != null) ? [circle] : []),
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller = controller;
-                    },
-                  ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
+                  children: [
+                    GoogleMap(
+                      mapType: MapType.normal,
+                      initialCameraPosition: initialLocation,
+                      markers: Set.of((marker != null) ? [marker] : []),
+                      circles: Set.of((circle != null) ? [circle] : []),
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller = controller;
+                      },
+                    ),
+                    Container(
+                      alignment: Alignment.bottomCenter,
 
-                    child: SizedBox(
-                      height: size.height*0.08,
-                      width: size.width*0.30,
-                      child: RaisedButton(
+                      child: SizedBox(
+                        //height: size.height*0.08,
+                        //width: size.width*0.30,
+                        child: RoundedButton(
+                          text: "Etrafa Bakın",
+                          press: (){
+                            getCurrentLocation();
+                          },
+                          color: kPrimaryColor.withOpacity(1),
 
-                        child: Text("Etrafa Bakın"),
-                        onPressed: (){
-                          getCurrentLocation();
-                        },
-                        color: kPrimaryColor.withOpacity(1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                    ),
-                  )
-                ]
+                    )
+                  ]
               ),
             ),
 
-            Container(
-              margin: EdgeInsets.only(top:kDefaultPadding),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      //One element from read json
-                      Card(
-                        child: Text(users.elementAt(0).userName),
-                      ),
-                      Card(
-                        child: Text("asdsadas"),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            NearbyedUsers(users: users),
+
+
+
           ],
         ),
       ),
@@ -219,3 +222,4 @@ class _BodyState extends State<Body> {
     );
   }
 }
+
