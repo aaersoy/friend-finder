@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:friend_finder/apis/users_api.dart';
+import 'package:friend_finder/components/user.dart';
 
 
-import 'user.dart';
+
 
 class LoadingGetUser extends StatefulWidget {
 
@@ -14,14 +15,21 @@ class LoadingGetUser extends StatefulWidget {
 }
 
 class _LoadingGetUserState extends State<LoadingGetUser>{
+
+
   @override
   void getData() async{
+
     List<User> users=List<User>();
     UserAPI instance = UserAPI(localJsonPath:"datas/users.json");
-    users=(await instance.getNearbyUser(1)).cast<User>(); //şimdlik statik ama daha sonradan kullanıcıya özel olarak specify edilmeli.
+    users= await instance.getNearbyUser(1);
+    await instance.getNearbyUser(1);//şimdlik statik ama daha sonradan kullanıcıya özel olarak specify edilmeli.
+    print(users.length);
     Navigator.pushReplacementNamed(context, '/home', arguments: {'users' : users});
-    print("ayberk3");
+
   }
+
+
 
   @override
   void initState() {

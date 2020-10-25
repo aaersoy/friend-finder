@@ -5,8 +5,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:friend_finder/apis/users_api.dart';
+import 'package:friend_finder/controllers/welcome/welcome_controller.dart';
+import 'package:friend_finder/screen/settings/components/settings_body.dart';
 import 'file:///C:/src/flutter_project/friend_finder/lib/components/buttons/rounded_button.dart';
-import 'file:///C:/src/flutter_project/friend_finder/lib/components/cards/specified_user_card.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -34,6 +35,8 @@ class _BodyState extends State<Body> {
   GoogleMapController _controller;
   List<User> users;
   Map data={};
+  User actualUser;
+
 
 
 
@@ -57,7 +60,9 @@ class _BodyState extends State<Body> {
   }
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
+    print("Ayberk");
     LatLng latlng = LatLng(newLocalData.latitude, newLocalData.longitude);
+
     this.setState(() {
       marker = Marker(
           markerId: MarkerId("home"),
@@ -91,8 +96,6 @@ class _BodyState extends State<Body> {
       if (_locationSubscription != null) {
         _locationSubscription.cancel();
       }
-
-
       _locationSubscription = _locationTracker.onLocationChanged().listen((newLocalData) {
         if (_controller != null) {
           _controller.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
@@ -103,6 +106,9 @@ class _BodyState extends State<Body> {
           updateMarkerAndCircle(newLocalData, imageData);
         }
       });
+
+
+
 
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
@@ -156,20 +162,47 @@ class _BodyState extends State<Body> {
 
   }
 
+
     @override
   Widget build(BuildContext context) {
     //createAlbum();
     Size size=MediaQuery.of(context).size;
     getUsers();
+
     //print(users);
-    data=data.isEmpty ? ModalRoute.of(context).settings.arguments : data;
-    users=data['users'];
-    print(users.length);
+    //Map passedData=ModalRoute.of(context).settings.arguments;
+    //actualUser=passedData.isEmpty ? passedData['userData']:actualUser;
+    print("Ayberk");
+    //data=passedData.isEmpty ? passedData: data;
+//    print(data);
+//    print(actualUser);
+    //print("Ayberkaaaaa");
+
+
+
+    //print(users.length);
     return Scaffold(
       appBar: AppBar(
-        title: Text("widget.title"),
+        title:Text("title"),
         backgroundColor: kPrimaryColor,
+        actions: [
+          RaisedButton(
+              child: Icon(Icons.settings),
+              onPressed: (){
+                Navigator.push(context,
+                    MaterialPageRoute(
+                          builder: (context) {
+                            return SettingsBody();
+                          }
+                        )
+                );
+              },
+              color: kPrimaryColor,
+          ),
+
+        ],
       ),
+
       body: Container(
         child: Column(
           children: [
@@ -178,20 +211,24 @@ class _BodyState extends State<Body> {
               child: Stack(
                   children: [
                     GoogleMap(
+
                       mapType: MapType.normal,
                       initialCameraPosition: initialLocation,
                       markers: Set.of((marker != null) ? [marker] : []),
                       circles: Set.of((circle != null) ? [circle] : []),
                       onMapCreated: (GoogleMapController controller) {
                         _controller = controller;
+
                       },
                     ),
                     Container(
                       alignment: Alignment.bottomCenter,
 
                       child: SizedBox(
+
                         //height: size.height*0.08,
                         //width: size.width*0.30,
+
                         child: RoundedButton(
                           text: "Etrafa Bakın",
                           press: (){
@@ -213,12 +250,13 @@ class _BodyState extends State<Body> {
           ],
         ),
       ),
-//      floatingActionButton: FloatingActionButton(
-//          child: Icon(Icons.location_searching),
-//          backgroundColor: kPrimaryColor,
-//          onPressed: () {
-//            getCurrentLocation();
-//          }),
+
+////      floatingActionButton: FloatingActionButton(
+////          child: Icon(Icons.location_searching),
+////          backgroundColor: kPrimaryColor,
+////          onPressed: () {
+////            getCurrentLocation();
+////          }),
     );
   }
 }

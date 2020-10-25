@@ -25,11 +25,11 @@ class RoundedButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(29),
         child: FlatButton(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-          color: color,
+          color: kBackGroundColor.withAlpha(128),
           onPressed: press,
           child: Text(
             text,
-            style: TextStyle(color: textColor),
+            style: TextStyle(color: textColor,fontSize: kDefaultFontSize-5),
           ),
         ),
       ),

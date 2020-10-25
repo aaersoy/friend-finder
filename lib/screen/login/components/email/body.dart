@@ -5,7 +5,7 @@ import 'file:///C:/src/flutter_project/friend_finder/lib/screen/loading_get_user
 import 'file:///C:/src/flutter_project/friend_finder/lib/components/buttons/rounded_button.dart';
 import 'file:///C:/src/flutter_project/friend_finder/lib/components/fields/rounded_input_field.dart';
 import 'file:///C:/src/flutter_project/friend_finder/lib/components/fields/rounded_password_field.dart';
-import 'package:friend_finder/screen/login/components/background.dart';
+import 'file:///C:/src/flutter_project/friend_finder/lib/screen/login/components/email/background.dart';
 
 class Body extends StatelessWidget {
   const Body({

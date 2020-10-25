@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:friend_finder/screen/login/components/body.dart';
+import 'file:///C:/src/flutter_project/friend_finder/lib/screen/login/components/email/body.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
