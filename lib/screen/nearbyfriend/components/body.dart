@@ -170,10 +170,10 @@ class _BodyState extends State<Body> {
     getUsers();
 
     //print(users);
-    //Map passedData=ModalRoute.of(context).settings.arguments;
+    Map passedData=ModalRoute.of(context).settings.arguments;
     //actualUser=passedData.isEmpty ? passedData['userData']:actualUser;
     print("Ayberk");
-    //data=passedData.isEmpty ? passedData: data;
+    users=passedData.isEmpty ?  users:passedData['users'];
 //    print(data);
 //    print(actualUser);
     //print("Ayberkaaaaa");
@@ -234,7 +234,7 @@ class _BodyState extends State<Body> {
                           press: (){
                             getCurrentLocation();
                           },
-                          color: kPrimaryColor.withOpacity(1),
+                          color: kBackGroundColor,
 
                         ),
                       ),
